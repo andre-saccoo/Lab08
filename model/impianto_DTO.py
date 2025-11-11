@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from database.consumo_DAO import ConsumoDAO
 
 '''
-    DTO (Data Transfer Object) dell'entità Impianto
+DTO (Data Transfer Object) dell'entità Impianto
 '''
 
 @dataclass()

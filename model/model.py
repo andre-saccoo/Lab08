@@ -1,4 +1,5 @@
 from database.impianto_DAO import ImpiantoDAO
+from database.consumo_DAO import ConsumoDAO
 
 '''
     MODELLO:
@@ -19,13 +20,27 @@ class Model:
         """ Carica tutti gli impianti e li setta nella variabile self._impianti """
         self._impianti = ImpiantoDAO.get_impianti()
 
+
     def get_consumo_medio(self, mese:int):
         """
         Calcola, per ogni impianto, il consumo medio giornaliero per il mese selezionato.
         :param mese: Mese selezionato (un intero da 1 a 12)
         :return: lista di tuple --> (nome dell'impianto, media), es. (Impianto A, 123)
         """
-        # TODO
+        somma_consumi = 0
+        conta_giorni_mese=0
+        lista_consumo_medio = [] #da dare in return avrà il nome dell'impianto e la media del consumo del mese
+        for impianto in self._impianti:
+            self.lista_consumi = ConsumoDAO.get_consumi( impianto.id )
+            for consumo in self.lista_consumi:
+                if consumo.data.month == mese:
+                    somma_consumi += consumo.kwh
+                    conta_giorni_mese += 1
+
+            media_consumi = somma_consumi / conta_giorni_mese
+            lista_consumo_medio.append( (impianto.nome, media_consumi))
+        return lista_consumo_medio
+
 
     def get_sequenza_ottima(self, mese:int):
         """

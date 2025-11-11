@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 
 '''
-    DTO (Data Transfer Object) dell'entità Consumo
+DTO (Data Transfer Object) dell'entità Consumo
 '''
 
 

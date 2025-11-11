@@ -2,8 +2,8 @@ from database.DB_connect import ConnessioneDB
 from model.impianto_DTO import Impianto
 
 """
-    IMPIANTO DAO
-    Gestisce le operazioni di accesso al database.
+IMPIANTO DAO
+Gestisce le operazioni di accesso al database.
 """
 
 class ImpiantoDAO:

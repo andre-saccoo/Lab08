@@ -12,7 +12,6 @@ class Model:
     def __init__(self):
         self._impianti = None
         self.load_impianti()
-
         self.__sequenza_ottima = []
         self.__costo_ottimo = -1
 
@@ -29,14 +28,14 @@ class Model:
         """
         somma_consumi = 0
         conta_giorni_mese=0
+        lista_consumi=[]
         lista_consumo_medio = [] #da dare in return avrà il nome dell'impianto e la media del consumo del mese
         for impianto in self._impianti:
-            self.lista_consumi = ConsumoDAO.get_consumi( impianto.id )
-            for consumo in self.lista_consumi:
+            lista_consumi = ConsumoDAO.get_consumi( impianto.id )
+            for consumo in lista_consumi:
                 if consumo.data.month == mese:
                     somma_consumi += consumo.kwh
                     conta_giorni_mese += 1
-
             media_consumi = somma_consumi / conta_giorni_mese
             lista_consumo_medio.append( (impianto.nome, media_consumi))
         return lista_consumo_medio

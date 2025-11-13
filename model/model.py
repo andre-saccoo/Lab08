@@ -28,7 +28,6 @@ class Model:
         """
         somma_consumi = 0
         conta_giorni_mese=0
-        lista_consumi=[]
         lista_consumo_medio = [] #da dare in return avrà il nome dell'impianto e la media del consumo del mese
         for impianto in self._impianti:
             lista_consumi = ConsumoDAO.get_consumi( impianto.id )
@@ -60,12 +59,53 @@ class Model:
 
     def __ricorsione(self, sequenza_parziale, giorno, ultimo_impianto, costo_corrente, consumi_settimana):
         """ Implementa la ricorsione """
-        # TODO
+        #sequenza parziale è una sequenza vuota | consumi_settimana è un dizionario con scritto codice impianto: lista consumi settimana
+        id_impianto_1 = self._impianti[0].id
+        id_impianto_2 = self._impianti[1].id
+        altro_impianto = None
+        #faccio la scelta per il primo giorno della settimana,
+        # prendiamo i primi due consumi e impostiamo il più basso come ultimo consumo appendendolo alla lista
+        if ultimo_impianto is None and giorno ==1:
+            if consumi_settimana[id_impianto_1][giorno - 1] <= consumi_settimana[id_impianto_2][giorno - 1]:
+                ultimo_impianto=id_impianto_1
+                altro_impianto=id_impianto_2
+                sequenza_parziale.append(ultimo_impianto)
+                costo_corrente +=consumi_settimana[id_impianto_1][giorno - 1]
+            else:
+                ultimo_impianto=id_impianto_2
+                altro_impianto=id_impianto_1
+                sequenza_parziale.append(ultimo_impianto)
+                costo_corrente += consumi_settimana[id_impianto_2][giorno - 1]
+
+        # condizione di uscita giorni <= 7
+        elif giorno <= 7 and ultimo_impianto is not None and altro_impianto is not None:
+            if consumi_settimana [ ultimo_impianto ][ giorno-1 ]<consumi_settimana[ altro_impianto ][ giorno-1]+5:
+                sequenza_parziale.append(ultimo_impianto)
+                costo_corrente += consumi_settimana [ ultimo_impianto ][ giorno-1 ]
+            else:
+                sequenza_parziale.append(altro_impianto)
+                costo_corrente = costo_corrente + consumi_settimana[ altro_impianto ][ giorno-1]+5
+
+
+            sequenza_parziale.append(ultimo_impianto)
+            giorno=giorno+1
+            self.__ricorsione(sequenza_parziale,giorno, ultimo_impianto, costo_corrente, consumi_settimana)
+
+        else:
+            self.__costo_ottimo = costo_corrente
+            self.__sequenza_ottima = list(sequenza_parziale)
 
     def __get_consumi_prima_settimana_mese(self, mese: int):
         """
         Restituisce i consumi dei primi 7 giorni del mese selezionato per ciascun impianto.
         :return: un dizionario: {id_impianto: [kwh_giorno1, ..., kwh_giorno7]}
         """
-        # TODO
-
+        dizionario_consumi={}
+        for impianto in self._impianti:
+            lista_consumi = ConsumoDAO.get_consumi(mese)
+            for consumo in lista_consumi:
+                lista_consumi_settimana = []
+                if consumo.data.month ==mese and consumo.data.day <=7:
+                    lista_consumi_settimana.append(consumo)
+                dizionario_consumi[impianto.id]=lista_consumi_settimana
+        return dizionario_consumi

@@ -2,10 +2,10 @@ from database.impianto_DAO import ImpiantoDAO
 from database.consumo_DAO import ConsumoDAO
 
 '''
-    MODELLO:
-    - Rappresenta la struttura dati
-    - Si occupa di gestire lo stato dell'applicazione
-    - Interagisce con il database
+MODELLO:
+- Rappresenta la struttura dati
+- Si occupa di gestire lo stato dell'applicazione
+- Interagisce con il database
 '''
 
 class Model:
@@ -18,7 +18,6 @@ class Model:
     def load_impianti(self):
         """ Carica tutti gli impianti e li setta nella variabile self._impianti """
         self._impianti = ImpiantoDAO.get_impianti()
-
 
     def get_consumo_medio(self, mese:int):
         """
@@ -38,7 +37,6 @@ class Model:
             media_consumi = somma_consumi / conta_giorni_mese
             lista_consumo_medio.append( (impianto.nome, media_consumi))
         return lista_consumo_medio
-
 
     def get_sequenza_ottima(self, mese:int):
         """
@@ -89,6 +87,8 @@ class Model:
                 else:
                     altro_impianto = id_impianto_1
 
+                print(consumi_settimana[1][giorno - 1])
+                print(consumi_settimana[2][giorno - 1])
                 if consumi_settimana [ ultimo_impianto ][ giorno-1 ]<consumi_settimana[ altro_impianto ][ giorno-1]+5:
                     sequenza_parziale.append(ultimo_impianto)
                     costo_corrente += consumi_settimana [ ultimo_impianto ][ giorno-1 ]
@@ -100,8 +100,6 @@ class Model:
                 self.__ricorsione(sequenza_parziale, giorno, ultimo_impianto, costo_corrente, consumi_settimana)
                 sequenza_parziale.pop()
 
-
-
     def __get_consumi_prima_settimana_mese(self, mese: int):
         """
         Restituisce i consumi dei primi 7 giorni del mese selezionato per ciascun impianto.
@@ -109,11 +107,10 @@ class Model:
         """
         dizionario_consumi={}
         for impianto in self._impianti:
-            lista_consumi = ConsumoDAO.get_consumi(mese)
-            lista_consumi_settimana = []
+            lista_consumi = impianto.get_consumi()
+            lista_consumi_settimana=[]
             for consumo in lista_consumi:
                 if consumo.data.month ==mese and consumo.data.day <=7:
                     lista_consumi_settimana.append(consumo.kwh)
-                dizionario_consumi[impianto.id]=lista_consumi_settimana
-
+            dizionario_consumi[impianto.id]=lista_consumi_settimana
         return dizionario_consumi

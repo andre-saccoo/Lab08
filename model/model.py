@@ -35,7 +35,8 @@ class Model:
                     somma_consumi += consumo.kwh
                     conta_giorni_mese += 1
             media_consumi = somma_consumi / conta_giorni_mese
-            lista_consumo_medio.append( (impianto.nome, media_consumi))
+            media_arrotondata=round(media_consumi, 2)
+            lista_consumo_medio.append( (impianto.nome, media_arrotondata) )
         return lista_consumo_medio
 
     def get_sequenza_ottima(self, mese:int):

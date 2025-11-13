@@ -87,8 +87,6 @@ class Model:
                 else:
                     altro_impianto = id_impianto_1
 
-                print(consumi_settimana[1][giorno - 1])
-                print(consumi_settimana[2][giorno - 1])
                 if consumi_settimana [ ultimo_impianto ][ giorno-1 ]<consumi_settimana[ altro_impianto ][ giorno-1]+5:
                     sequenza_parziale.append(ultimo_impianto)
                     costo_corrente += consumi_settimana [ ultimo_impianto ][ giorno-1 ]

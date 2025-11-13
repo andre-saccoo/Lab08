@@ -68,32 +68,36 @@ class Model:
         else:
             id_impianto_1 = self._impianti[0].id
             id_impianto_2 = self._impianti[1].id
-            altro_impianto = None
             if ultimo_impianto is None and giorno ==1:
-                print(consumi_settimana[id_impianto_1])
                 if consumi_settimana[id_impianto_1][giorno - 1] <= consumi_settimana[id_impianto_2][giorno - 1]:
-                    ultimo_impianto=id_impianto_1
-                    altro_impianto=id_impianto_2
+                    ultimo_impianto = id_impianto_1
+
                     sequenza_parziale.append(ultimo_impianto)
                     costo_corrente +=consumi_settimana[id_impianto_1][giorno - 1]
                     giorno = giorno + 1
                 else:
-                    ultimo_impianto=id_impianto_2
-                    altro_impianto=id_impianto_1
+                    ultimo_impianto = id_impianto_2
                     sequenza_parziale.append(ultimo_impianto)
                     costo_corrente += consumi_settimana[id_impianto_2][giorno - 1]
                     giorno = giorno + 1
                 self.__ricorsione(sequenza_parziale, giorno, ultimo_impianto, costo_corrente, consumi_settimana)
                 sequenza_parziale.pop()
 
-            elif giorno <= 7 and ultimo_impianto is not None and altro_impianto is not None:
+            elif  1< giorno <= 7 and ultimo_impianto is not None:
+                # if che determina altro impianto a seconda del precedente
+                if ultimo_impianto == id_impianto_1:
+                    altro_impianto = id_impianto_2
+                else:
+                    altro_impianto = id_impianto_1
+
                 if consumi_settimana [ ultimo_impianto ][ giorno-1 ]<consumi_settimana[ altro_impianto ][ giorno-1]+5:
                     sequenza_parziale.append(ultimo_impianto)
                     costo_corrente += consumi_settimana [ ultimo_impianto ][ giorno-1 ]
                 else:
                     sequenza_parziale.append(altro_impianto)
+                    ultimo_impianto = altro_impianto
                     costo_corrente = costo_corrente + consumi_settimana[ altro_impianto ][ giorno-1]+5
-                giorno=giorno+1
+                giorno+=1
                 self.__ricorsione(sequenza_parziale, giorno, ultimo_impianto, costo_corrente, consumi_settimana)
                 sequenza_parziale.pop()
 
